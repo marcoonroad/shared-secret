@@ -1,3 +1,18 @@
+module type MessageSig = sig
+  type t
+  type a
+
+  module Encoder : sig val encode : a -> t end;;
+  module Decoder : sig val decode : t -> a end;;
+end;;
+
+module Message (Type : sig type t end) : MessageSig with type a := Type.t = struct
+  type t = Type.t
+
+  module Encoder = struct let encode msg = msg end;;
+  module Decoder = struct let decode msg = msg end;;
+end;;
+
 module type ExceptionSig = sig
   type t
 
