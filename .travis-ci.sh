@@ -24,11 +24,12 @@ echo "*** <Install> done! ***"
 
 # compile & run tests
 export LIBS='lib/SharedSecret.ml'
+export OCAMLFIND='~/.opam/system/bin/ocamlfind'
 
 mkdir _test
 for file in lib_test/*.ml
 do
-    ocamlfind ocamlc -o "_test/$file" -package oUnit -linkpkg -I lib -g $LIBS $file
+    $OCAMLFIND ocamlc -o "_test/$file" -package oUnit -linkpkg -I lib -g $LIBS $file
 done
 echo "*** <Link> done! ***"
 
