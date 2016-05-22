@@ -23,7 +23,7 @@ opam install -q -y ${OPAM_PACKAGES}
 echo "*** <Install> done! ***"
 
 # compile & run tests
-LIBS = `lib/SharedSecret.ml`
+export LIBS='lib/SharedSecret.ml'
 
 mkdir _test
 for file in lib_test/*.ml
