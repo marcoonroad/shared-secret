@@ -15,7 +15,7 @@ make lib-ext
 make
 sudo make install
 opam init
-eval `opam config -env`
+opam config setup -a
 popd
 
 # install packages from opam
