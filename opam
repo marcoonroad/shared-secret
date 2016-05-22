@@ -9,7 +9,7 @@ homepage: "http://github.com/marcoonroad/shared-secret"
 dev-repo: "http://github.com/marcoonroad/shared-secret"
 available: [ocaml-version >= "3.12"]
 build: [
-  ["./configure" "--prefix=%{prefix}%" "--%{ounit:enable}-tests"]
+  ["./configure" "--prefix=%{prefix}%" "--%{ounit:enable}%-tests"]
   [make]
 ]
 build-test: [make "test"]
