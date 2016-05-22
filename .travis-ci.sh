@@ -20,7 +20,25 @@ popd
 
 # install packages from opam
 opam install -q -y ${OPAM_PACKAGES}
+echo "*** <Install> done! ***"
 
 # compile & run tests
-./configure --enable-tests
-make test
+LIBS = `lib/SharedSecret.ml`
+
+mkdir _test
+for file in lib_test/*.ml
+do
+    ocamlfind ocamlc -o "_test/$file" -package oUnit -linkpkg -I lib -g $LIBS $file
+done
+echo "*** <Link> done! ***"
+
+for test in _test/*
+do
+    ./_test/$test
+done
+echo "*** <Test> done! ***"
+
+# clean
+rm -R -f _test
+echo "*** <Clear> done! ***"
+echo "*** <Build> done! ***"
