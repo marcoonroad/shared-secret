@@ -8,4 +8,5 @@
 #  - linux
 
 language: c
+sudo: required
 script: bash -ex .travis-ci.sh
