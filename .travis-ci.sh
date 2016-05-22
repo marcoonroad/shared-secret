@@ -24,7 +24,7 @@ echo "*** <Install> done! ***"
 
 # compile & run tests
 export LIBS='lib/SharedSecret.ml'
-export OCAMLFIND='~/.opam/system/bin/ocamlfind'
+export OCAMLFIND='/home/travis/.opam/system/bin/ocamlfind'
 
 mkdir _test
 for file in lib_test/*.ml
