@@ -12,6 +12,7 @@ curl -L https://github.com/OCamlPro/opam/archive/${OPAM_VERSION}.tar.gz | tar xz
 pushd /tmp/opam-${OPAM_VERSION}
 ./configure
 make lib-ext
+make
 sudo make install
 opam init
 eval `opam config -env`
