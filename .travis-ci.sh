@@ -23,20 +23,23 @@ opam install -q -y ${OPAM_PACKAGES}
 echo "*** <Install> done! ***"
 
 # compile & run tests
-export LIBS='lib/SharedSecret.ml'
+export LIBS='../lib/SharedSecret.ml'
 export OCAMLFIND='/home/travis/.opam/system/bin/ocamlfind'
 
 mkdir _test
-for file in lib_test/*.ml
+cd lib_test
+for file in ./*.ml
 do
-    $OCAMLFIND ocamlc -o "_test/$file" -package oUnit -linkpkg -I lib -g $LIBS $file
+    $OCAMLFIND ocamlc -o "../_test/$file" -package oUnit -linkpkg -I ../lib -g $LIBS $file
 done
 echo "*** <Link> done! ***"
 
-for test in _test/*
+cd ../_test
+for test in ./*
 do
     ./_test/$test
 done
+cd ..
 echo "*** <Test> done! ***"
 
 # clean
