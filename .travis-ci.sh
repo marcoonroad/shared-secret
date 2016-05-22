@@ -37,7 +37,7 @@ echo "*** <Link> done! ***"
 cd ../_test
 for test in *
 do
-    ./_test/$test
+    ./$test
 done
 cd ..
 echo "*** <Test> done! ***"
