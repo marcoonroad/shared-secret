@@ -28,14 +28,14 @@ export OCAMLFIND='/home/travis/.opam/system/bin/ocamlfind'
 
 mkdir _test
 cd lib_test
-for file in ./*.ml
+for file in *.ml
 do
     $OCAMLFIND ocamlc -o "../_test/$file" -package oUnit -linkpkg -I ../lib -g $LIBS $file
 done
 echo "*** <Link> done! ***"
 
 cd ../_test
-for test in ./*
+for test in *
 do
     ./_test/$test
 done
