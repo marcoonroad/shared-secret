@@ -14,8 +14,8 @@ pushd /tmp/opam-${OPAM_VERSION}
 make lib-ext
 make
 sudo make install
-opam init
 opam config setup -a
+opam init
 popd
 
 # install packages from opam
