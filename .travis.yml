@@ -6,4 +6,3 @@ env:
   - OCAML_VERSION=latest
 os:
   - linux
-  - osx

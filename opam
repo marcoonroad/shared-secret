@@ -5,6 +5,7 @@ maintainer: "Marco Aurélio <marcoonroad@gmail.com>"
 authors: "Marco Aurélio <marcoonroad@gmail.com>"
 bug-reports: "http://github.com/marcoonroad/shared-secret/issues"
 license: "MIT License"
+homepage: "http://github.com/marcoonroad/shared-secret"
 dev-repo: "http://github.com/marcoonroad/shared-secret"
 available: [ocaml-version >= "3.12"]
 build: [
