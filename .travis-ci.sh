@@ -49,8 +49,8 @@ echo ""
 # done
 # cd ..
 
-export OASIS='/home/travis/.opam/system/bin/oasis'
-$OASIS setup
+export PATH=/home/travis/.opam/system/bin:$PATH
+oasis setup
 ocaml setup.ml -configure --enable-tests
 ocaml setup.ml -build
 ocaml setup.ml -test
