@@ -1,0 +1,50 @@
+Name: shared-secret
+Version: 0.1
+Synopsis: Exceptions are shared secrets.
+Authors: Marco Aurélio da Silva <marcoonroad@gmail.com>
+License: MIT
+
+Description: Abstract (encapsulated) messages or hidden (semi-deterministic) exceptions using OCaml's module system.
+Homepage: http://github.com/marcoonroad/shared-secret
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Library "shared-secret"
+  Path: lib
+  Modules: SharedSecret
+
+SourceRepository master
+  Type: git
+  Location: http://github.com/marcoonroad/shared-secret.git
+  Branch: master
+  Browser: http://github.com/marcoonroad/shared-secret
+
+Executable "exceptional"
+  Path: lib_test
+  MainIs: exceptional.ml
+  Build$: flag(tests)
+  CompiledObject: byte
+  Install: false
+  BuildDepends: shared-secret, oUnit
+
+Executable "applicative"
+  Path: lib_test
+  MainIs: applicative.ml
+  Build$: flag(tests)
+  CompiledObject: byte
+  Install: false
+  BuildDepends: shared-secret, oUnit
+
+Test "exceptional"
+  Run$: flag(tests)
+  TestTools: exceptional
+  Command: $exceptional
+  WorkingDirectory: lib_test
+
+Test "applicative"
+  Run$: flag(tests)
+  TestTools: applicative
+  Command: $applicative
+  WorkingDirectory: lib_test

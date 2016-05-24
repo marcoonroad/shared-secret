@@ -1,7 +1,7 @@
 # OPAM version to install
 export OPAM_VERSION=1.2
 # OPAM packages needed to build tests
-export OPAM_PACKAGES='ocamlfind ounit'
+export OPAM_PACKAGES='ocamlfind ounit oasis'
 
 # install ocaml from apt
 sudo apt-get update -qq
@@ -20,29 +20,57 @@ popd
 
 # install packages from opam
 opam install -q -y ${OPAM_PACKAGES}
-echo "*** <Install> done! ***"
+echo ""
+echo ""
+echo "***************************"
+echo "*                         *"
+echo "*   <Environment> done!   *"
+echo "*                         *"
+echo "***************************"
+echo ""
+echo ""
 
 # compile & run tests
-export LIBS='../lib/SharedSecret.ml'
-export OCAMLFIND='/home/travis/.opam/system/bin/ocamlfind'
+# export LIBS='../lib/SharedSecret.ml'
+# export OCAMLFIND='/home/travis/.opam/system/bin/ocamlfind'
 
-mkdir _test
-cd lib_test
-for file in *.ml
-do
-    $OCAMLFIND ocamlc -o "../_test/$file" -package oUnit -linkpkg -I ../lib -g $LIBS $file
-done
-echo "*** <Link> done! ***"
+# mkdir _test
+# cd lib_test
+# for file in *.ml
+# do
+#    $OCAMLFIND ocamlc -o "../_test/$file" -package oUnit -linkpkg -I ../lib -g $LIBS $file
+# done
+# echo "*** <Link> done! ***"
 
-cd ../_test
-for test in *
-do
-    ./$test
-done
-cd ..
-echo "*** <Test> done! ***"
+# cd ../_test
+# for test in *
+# do
+#    ./$test
+# done
+# cd ..
+
+oasis setup
+ocaml setup.ml -configure --enable-tests
+ocaml setup.ml -build
+ocaml setup.ml -test
+echo ""
+echo ""
+echo "*********************"
+echo "*                   *"
+echo "*   <Tests> done!   *"
+echo "*                   *"
+echo "*********************"
+echo ""
+echo ""
 
 # clean
-rm -R -f _test
-echo "*** <Clear> done! ***"
-echo "*** <Build> done! ***"
+ocaml setup.ml -distclean
+echo ""
+echo ""
+echo "***********************"
+echo "*                     *"
+echo "*   <Cleanup> done!   *"
+echo "*                     *"
+echo "***********************"
+
+# end

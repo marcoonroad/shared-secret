@@ -6,7 +6,7 @@ authors: "Marco Aurélio <marcoonroad@gmail.com>"
 bug-reports: "http://github.com/marcoonroad/shared-secret/issues"
 license: "MIT License"
 homepage: "http://github.com/marcoonroad/shared-secret"
-dev-repo: "http://github.com/marcoonroad/shared-secret"
+dev-repo: "http://github.com/marcoonroad/shared-secret.git"
 available: [ocaml-version >= "3.12"]
 build: [
   ["./configure" "--prefix=%{prefix}%" "--%{ounit:enable}%-tests"]
@@ -17,5 +17,6 @@ install: [make "install"]
 remove: ["ocamlfind" "remove" "shared-secret"]
 depends: [
   "ounit" {test}
+  "oasis" {build}
   "ocamlfind" {build}
 ]

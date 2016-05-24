@@ -9,8 +9,13 @@
 *.cmxa
 *.log
 *.cache
+*.byte
+*.mldylib
+*.mllib
+*.cmx
+*/META
 *~
-test
+myocamlbuild
 
 # ocamlbuild working directory
 _build/
@@ -20,5 +25,9 @@ _build/
 *.native
 
 # oasis generated files
-# setup.data
-# setup.log
+myocamlbuild.ml
+setup.data
+setup.log
+_tags
+
+# end
