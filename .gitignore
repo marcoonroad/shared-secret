@@ -30,4 +30,8 @@ setup.data
 setup.log
 _tags
 
+# opam files
+url
+descr
+
 # end
