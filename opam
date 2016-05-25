@@ -17,6 +17,5 @@ install: [make "install"]
 remove: ["ocamlfind" "remove" "shared-secret"]
 depends: [
   "ounit" {test}
-  "oasis" {build}
   "ocamlfind" {build}
 ]
