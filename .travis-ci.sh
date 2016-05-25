@@ -1,3 +1,4 @@
+export OCAML_VERSION=4.02.1
 # OPAM version to install
 export OPAM_VERSION=1.2
 # OPAM packages needed to build tests
@@ -19,6 +20,8 @@ opam config setup -a
 popd
 
 # install packages from opam
+opam switch $OCAML_VERSION
+eval `opam config env`
 opam install -q -y ${OPAM_PACKAGES}
 echo ""
 echo ""
@@ -49,7 +52,7 @@ echo ""
 # done
 # cd ..
 
-export PATH=/home/travis/.opam/system/bin:$PATH
+export PATH=/home/travis/.opam/$OCAML_VERSION/bin:$PATH
 oasis setup
 ocaml setup.ml -configure --enable-tests
 ocaml setup.ml -build
