@@ -6,12 +6,23 @@ module type IMessage = sig
   module Decoder : sig val decode : t -> a end;;
 end;;
 
-module Message (Type : sig type t end) : IMessage with type a := Type.t = struct
+module Message (Type : sig type t end) ( ) : (IMessage with type a := Type.t) = struct
   type t = Type.t
 
   module Encoder = struct let encode msg = msg end;;
   module Decoder = struct let decode msg = msg end;;
 end;;
+
+(*
+module Message (Type : sig type t end) : (IMessage with type a := Type.t) = struct
+  module Instance = GenerativeMessage (Type) ( );;
+
+  type t = Instance.t
+
+  module Encoder = Instance.Encoder;;
+  module Decoder = Instance.Decoder;;
+end;;
+ *)
 
 module type IException = sig
   type t
@@ -20,7 +31,7 @@ module type IException = sig
   module Handler : sig val handle : (unit -> 'a) -> (t -> 'a) -> 'a end;;
 end;;
 
-module Exception (Type : sig type t end) : IException with type t := Type.t = struct
+module Exception (Type : sig type t end) : (IException with type t := Type.t) = struct
   exception Class of Type.t
 
   module Raiser = struct
@@ -31,3 +42,5 @@ module Exception (Type : sig type t end) : IException with type t := Type.t = st
     let handle unsafe handler = try unsafe ( ) with Class value -> handler value
   end;;
 end;;
+
+(* end *)

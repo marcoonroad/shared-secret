@@ -7,7 +7,7 @@ bug-reports: "http://github.com/marcoonroad/shared-secret/issues"
 license: "MIT License"
 homepage: "http://github.com/marcoonroad/shared-secret"
 dev-repo: "http://github.com/marcoonroad/shared-secret.git"
-available: [ocaml-version >= "3.12"]
+available: [ocaml-version >= "4.02"]
 build: [
   ["./configure" "--prefix=%{prefix}%" "--%{ounit:enable}%-tests"]
   [make]
