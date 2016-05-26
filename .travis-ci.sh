@@ -23,15 +23,14 @@ popd
 opam switch $OCAML_VERSION
 eval `opam config env`
 opam install -q -y ${OPAM_PACKAGES}
-echo ""
-echo ""
-echo "***************************"
-echo "*                         *"
-echo "*   <Environment> done!   *"
-echo "*                         *"
-echo "***************************"
-echo ""
-echo ""
+
+# *************************
+#                         *
+#                         *
+#   <Environment> done!   *
+#                         *
+#                         *
+# *************************
 
 # compile & run tests
 # export LIBS='../lib/SharedSecret.ml'
@@ -57,24 +56,24 @@ oasis setup
 ocaml setup.ml -configure --enable-tests
 ocaml setup.ml -build
 ocaml setup.ml -test
-echo ""
-echo ""
-echo "*********************"
-echo "*                   *"
-echo "*   <Tests> done!   *"
-echo "*                   *"
-echo "*********************"
-echo ""
-echo ""
+
+# *******************
+#                   *
+#                   *
+#   <Tests> done!   *
+#                   *
+#                   *
+# *******************
 
 # clean
 ocaml setup.ml -distclean
-echo ""
-echo ""
-echo "***********************"
-echo "*                     *"
-echo "*   <Cleanup> done!   *"
-echo "*                     *"
-echo "***********************"
+
+# **********************
+#                      *
+#                      *
+#    <Cleanup> done!   *
+#                      *
+#                      *
+# **********************
 
 # end

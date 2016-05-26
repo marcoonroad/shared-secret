@@ -15,7 +15,6 @@
 *.cmx
 */META
 *~
-myocamlbuild
 
 # ocamlbuild working directory
 _build/
@@ -25,13 +24,13 @@ _build/
 *.native
 
 # oasis generated files
-myocamlbuild.ml
+lib/META
 setup.data
 setup.log
+myocamlbuild.ml
+setup.ml
 _tags
-
-# opam files
-url
-descr
+Makefile
+configure
 
 # end
