@@ -123,7 +123,7 @@ module Box : IBox;;
 
 The list below also shows where exceptions may be thrown:
 
-* `Token.AlreadyRevoked`, prone to occurs on `Token.revoke` if the `Token.t` was already revoked previously
+* `Token.AlreadyRevoked`, prone to occur on `Token.revoke` if the `Token.t` was already revoked previously
 * `Token.RevokedToken`, occurs on either `Box.Sealer.seal` or `Box.Unsealer.unseal` if `Token.revoke` was called at least once
 * `Box.InvalidToken`, always raised on `Box.Unsealer.unseal` if the `'value Box.t` was sealed with a different `Token.t`
 
