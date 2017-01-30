@@ -8,6 +8,32 @@ end;;
 
 module Message : functor (Type : sig type t end) ( ) -> (IMessage with type a := Type.t);;
 
+module type IToken = sig
+  type t
+  type revoker
+
+  exception RevokedToken
+  exception AlreadyRevoked
+
+  val create  : unit -> t * revoker
+  val revoke  : revoker -> unit
+  val revoked : t -> bool
+  val (=)     : t -> t -> bool
+end;;
+
+module Token : IToken;;
+
+module type IBox = sig
+  type 'value t
+
+  exception InvalidToken
+
+  module Sealer   : sig val seal   : Token.t -> 'value   -> 'value t end;;
+  module Unsealer : sig val unseal : Token.t -> 'value t -> 'value   end;;
+end;;
+
+module Box : IBox;;
+
 module type IException = sig
   type t
 

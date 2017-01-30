@@ -24,23 +24,27 @@ let second_decoder = Second.Decoder.decode
 let first_against_first ctxt =
   assert_equal (first_decoder (first_encoder ( ))) "Hello, OCaml!";;
 
-(*
+(* === TYPE ERROR ===
+
 let second_against_first ctxt =
   assert_equal (second_decoder (first_encoder ( ))) "Hello, OCaml!";;
- *)
 
-(*
 let first_against_second ctxt =
   assert_equal (first_decoder (second_encoder ( ))) "Hello, World!";;
- *)
+
+*)
 
 let second_against_second ctxt =
   assert_equal (second_decoder (second_encoder ( ))) "Hello, World!";;
 
 let suite = "suite" >::: [
   "first_against_first"   >:: first_against_first;
-  (* "second_against_first"  >:: second_against_first;
-  "first_against_second"  >:: first_against_second; *)
+(* === UNBOUND VARIABLE ===
+
+  "second_against_first"  >:: second_against_first;
+  "first_against_second"  >:: first_against_second;
+
+*)
   "second_against_second" >:: second_against_second
 ];;
 

@@ -13,16 +13,82 @@ module Message (Type : sig type t end) ( ) : (IMessage with type a := Type.t) = 
   module Decoder = struct let decode msg = msg end;;
 end;;
 
-(*
-module Message (Type : sig type t end) : (IMessage with type a := Type.t) = struct
-  module Instance = GenerativeMessage (Type) ( );;
+module type IToken = sig
+  type t
+  type revoker
 
-  type t = Instance.t
+  exception RevokedToken
+  exception AlreadyRevoked
 
-  module Encoder = Instance.Encoder;;
-  module Decoder = Instance.Decoder;;
+  val create  : unit -> t * revoker
+  val revoke  : revoker -> unit
+  val revoked : t -> bool
+  val (=)     : t -> t -> bool
 end;;
- *)
+
+module Token : IToken = struct
+  type t       = bool ref * int
+  type revoker = unit -> unit
+
+  exception RevokedToken
+  exception AlreadyRevoked
+
+  let counter = ref 0
+
+  let create ( ) =
+    incr counter;
+    let token = (ref false, !counter) in
+    let revoker ( ) =
+      match token with (revoked, _) ->
+        if !revoked then
+          raise AlreadyRevoked
+        else
+          revoked := true
+    in
+    (token, revoker)
+
+    let revoke revoker =
+      revoker ( )
+
+    let revoked (revoked, _) =
+      !revoked
+
+    let (=) = (=)
+end;;
+
+module type IBox = sig
+  type 'value t
+
+  exception InvalidToken
+
+  module Sealer   : sig val seal   : Token.t -> 'value   -> 'value t end;;
+  module Unsealer : sig val unseal : Token.t -> 'value t -> 'value   end;;
+end;;
+
+module Box : IBox = struct
+  type 'value t = Token.t * 'value
+
+  exception InvalidToken
+
+  module Sealer = struct
+    let seal token value =
+      if Token.revoked token then
+        raise Token.RevokedToken
+      else
+        (token, value)
+  end;;
+
+  module Unsealer = struct
+    let unseal token (token', value) =
+      if Token.(token = token') then
+       (if Token.revoked token' then
+          raise Token.RevokedToken
+        else
+          value)
+      else
+        raise InvalidToken
+  end;;
+end;;
 
 module type IException = sig
   type t

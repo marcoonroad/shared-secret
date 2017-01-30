@@ -33,4 +33,7 @@ _tags
 Makefile
 configure
 
+# open files
+*.swp
+
 # end
