@@ -127,6 +127,45 @@ The list below also shows where exceptions may be thrown:
 * `Token.RevokedToken`, occurs on either `Box.Sealer.seal` or `Box.Unsealer.unseal` if `Token.revoke` was called at least once
 * `Box.InvalidToken`, always raised on `Box.Unsealer.unseal` if the `'value Box.t` was sealed with a different `Token.t`
 
+### API for version 0.3
+
+In this version 2 new things were added. One thing is a module called `Pair` while the other is a generative functor called
+`Revocable`. This current API provides
+two functions in the `Pair` module, which are the `Exception` and `Box` operations being projected, somehow. Value restriction
+appears on both functions, though. The first function makes a pair of exception "handlers", the first element is the "raiser"
+while the second is the respective "catcher". The second function, on the other hand, generates a associated pair of projection
+and injection for a generic `Box` type. So, the needed `Token` value is hidden and shared among these operations. The whole purpose
+of this module is to provide shortcuts/aliases for other modules. Fair enough of
+cheap talking, the entire signature of `Pair` is:
+
+```ocaml
+module Pair : sig
+  val exceptional : unit -> ('value -> 'failure) * ((unit -> 'result) -> ('value -> 'result) -> 'result)
+  val sealing     : unit -> ('a -> 'a Box.t) * ('a Box.t -> 'a)
+end;;
+```
+
+The semantics of raised exceptions from the module level counterparts are still preserved and untouched.
+
+'Cause the `Token` value is hidden on `sealing` result operations, we need some way to revoke these operations
+without even touch the token itself. Here comes the generative `Revocable` functor. Being a generative functor, it will
+take an `( )` as argument, and so, yield a fresh module. This fresh module revokes generic lambda proxies, while keeping
+the original lambda expressions intact. That said, this module must be equipped with a `revoke` operation, once this operation
+is called, the fresh module itself becomes useless together with its respective generated lambda proxies. On any attempt to use
+these lambda proxies once the revocation was triggered, an exception `RevokedReference` (from the fresh module) is raised. When
+we call `revoke` again, another exception called `AlreadyRevoked` (also from the fresh module) is also raised. The signature below
+describes with some detail this generative functor:
+
+```ocaml
+module Revocable : functor ( ) -> sig
+  exception RevokedReference
+  exception AlreadyRevoked
+
+  val revocable : ('a -> 'b) -> ('a -> 'b)
+  val revoke    : unit -> unit
+end;;
+```
+
 ### References
 
 * <a name="morris-73"> </a> [ Morris73 ] Protection in Programming Languages, 1973 - James H. Morris Jr.

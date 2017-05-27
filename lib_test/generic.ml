@@ -1,68 +1,61 @@
-open OUnit2;;
-open SharedSecret;;
+open OUnit2
+open SharedSecret
 
-let (first, revoker) = Token.create ( );;
-let (second, _)      = Token.create ( );;
+module First = struct
+  let (token, revoker) = Token.create ( )
 
-let first_sealer  ( ) = Box.Sealer.seal first "Hello, OCaml!";;
-let second_sealer ( ) = Box.Sealer.seal second "Hello, World!";;
+  let sealer ( ) = Box.Sealer.seal token "Hello, OCaml!"
+  let unsealer   = Box.Unsealer.unseal token
+end
 
-let first_unsealer  = Box.Unsealer.unseal first;;
-let second_unsealer = Box.Unsealer.unseal second;;
+module Second = struct
+  let (token, _) = Token.create ( )
 
-let first_against_first ctxt =
-  assert_equal (first_unsealer (first_sealer ( ))) "Hello, OCaml!";;
+  let sealer ( ) = Box.Sealer.seal token "Hello, World!"
+  let unsealer   = Box.Unsealer.unseal token
+end
 
-let second_against_first ctxt =
-  let failed = ref false in
- (try
-    ignore (second_unsealer (first_sealer ( )))
-  with Box.InvalidToken ->
-    failed := true);
-  assert_equal !failed true;;
+let __first_against_first _ =
+  assert_equal (First.unsealer (First.sealer ( ))) "Hello, OCaml!"
 
-let first_against_second ctxt =
-  let failed = ref false in
- (try
-    ignore (first_unsealer (second_sealer ( )))
-  with Box.InvalidToken ->
-    failed := true);
-  assert_equal !failed true;;
+let __second_against_first _ =
+  let failure       = Box.InvalidToken in
+  let procedure ( ) = Second.unsealer (First.sealer ( )) in
+  assert_raises failure procedure
 
-let second_against_second ctxt =
-  assert_equal (second_unsealer (second_sealer ( ))) "Hello, World!";;
+let __first_against_second _ =
+  let failure       = Box.InvalidToken in
+  let procedure ( ) = First.unsealer (Second.sealer ( )) in
+  assert_raises failure procedure
 
-let sealed = first_sealer ( );;
+let __second_against_second _ =
+  assert_equal (Second.unsealer (Second.sealer ( ))) "Hello, World!"
+
+let sealed = First.sealer ( )
 
 let revoke ( ) =
-  try Token.revoke revoker with Token.AlreadyRevoked -> ( );;
+  try Token.revoke First.revoker with Token.AlreadyRevoked -> ( )
 
-let first_cant_seal ctxt =
-  revoke ( );
-  let failed = ref false in
- (try
-    ignore (first_sealer ( ))
-  with Token.RevokedToken ->
-    failed := true);
-  assert_equal !failed true;;
+let __first_cant_seal _ =
+  let failure       = Token.RevokedToken in
+  let procedure ( ) = revoke ( ); First.sealer ( ) in
+  assert_raises failure procedure
 
-let first_cant_unseal ctxt =
-  revoke ( );
-  let failed = ref false in
- (try
-    ignore (first_unsealer sealed)
-  with Token.RevokedToken ->
-    failed := true);
-  assert_equal !failed true;;
+let __first_cant_unseal _ =
+  let failure       = Token.RevokedToken in
+  let procedure ( ) = revoke ( ); First.unsealer sealed in
+  assert_raises failure procedure
 
-let suite = "suite" >::: [
-  "first_against_first"   >:: first_against_first;
-  "second_against_first"  >:: second_against_first;
-  "first_against_second"  >:: first_against_second;
-  "second_against_second" >:: second_against_second;
-  "first_cant_seal"       >:: first_cant_seal;
-  "first_cant_unseal"     >:: first_cant_unseal
-];;
+let suite = "generic-suite" >::: [
+  "first-against-first"   >:: __first_against_first;
+  "second-against-first"  >:: __second_against_first;
+  "first-against-second"  >:: __first_against_second;
+  "second-against-second" >:: __second_against_second;
+  "first-cant-seal"       >:: __first_cant_seal;
+  "first-cant-unseal"     >:: __first_cant_unseal
+]
 
 let _ =
     run_test_tt_main suite
+
+(* END *)

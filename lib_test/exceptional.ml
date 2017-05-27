@@ -1,36 +1,41 @@
-open OUnit2;;
-open SharedSecret;;
+open OUnit2
+open SharedSecret
 
-module First  = Exception (String);;
-module Second = Exception (String);;
+let identity value = value
 
-let unsafe_first  ( ) = First.Raiser.raise  "Oops!"
-let unsafe_second ( ) = Second.Raiser.raise "Hello, World!"
+module First = struct
+  include Exception (String)
 
-let first_handler  str = str
-let second_handler str = str
+  let procedure ( )     = Raiser.raise "Oops!"
+  let handler procedure = Handler.handle procedure identity
+end
 
-let first_test  unsafe = First.Handler.handle  unsafe first_handler
-let second_test unsafe = Second.Handler.handle unsafe second_handler
+module Second = struct
+  include Exception (String)
 
-let caught_first  ctxt = assert_equal (first_test unsafe_first)   "Oops!"
-let caught_second ctxt = assert_equal (second_test unsafe_second) "Hello, World!"
+  let procedure ( )     = Raiser.raise "Hello, World!"
+  let handler procedure = Handler.handle procedure identity
+end
 
-let uncaught_first ctxt =
+let __caught_first  _ = assert_equal (First.handler First.procedure)   "Oops!"
+let __caught_second _ = assert_equal (Second.handler Second.procedure) "Hello, World!"
+
+let __uncaught_first _ =
   let uncaught = "Uncaught." in
-  assert_equal (try (first_test unsafe_second) with _ -> uncaught) uncaught
+  assert_equal (try (First.handler Second.procedure) with _ -> uncaught) uncaught
 
-let uncaught_second ctxt =
+let __uncaught_second _ =
   let uncaught = "Uncaught." in
-  assert_equal (try (second_test unsafe_first) with _ -> uncaught) uncaught
+  assert_equal (try (Second.handler First.procedure) with _ -> uncaught) uncaught
 
-let suite =
-  "suite" >::: [
-    "caught_first"    >:: caught_first;
-    "caught_second"   >:: caught_second;
-    "uncaught_first"  >:: uncaught_first;
-    "uncaught_second" >:: uncaught_second
-  ];;
+let suite = "exceptional-suite" >::: [
+  "caught-first"    >:: __caught_first;
+  "caught-second"   >:: __caught_second;
+  "uncaught-first"  >:: __uncaught_first;
+  "uncaught-second" >:: __uncaught_second
+]
 
 let _ =
   run_test_tt_main suite
+
+(* END *)

@@ -27,31 +27,32 @@ module type IToken = sig
 end;;
 
 module Token : IToken = struct
-  type t       = bool ref * int
-  type revoker = unit -> unit
-
   exception RevokedToken
   exception AlreadyRevoked
 
-  let counter = ref 0
+  class token ( ) = object
+    val mutable revoked = false
+
+    method rescind ( ) =
+      if revoked then raise AlreadyRevoked
+      else revoked <- true
+
+    method rescinded ( ) =
+      revoked
+  end;;
+
+  type t       = token
+  type revoker = token
 
   let create ( ) =
-    incr counter;
-    let token = (ref false, !counter) in
-    let revoker ( ) =
-      match token with (revoked, _) ->
-        if !revoked then
-          raise AlreadyRevoked
-        else
-          revoked := true
-    in
-    (token, revoker)
+    let instance = new token ( ) in
+    (instance, instance)
 
-    let revoke revoker =
-      revoker ( )
+    let revoke instance =
+      instance # rescind ( )
 
-    let revoked (revoked, _) =
-      !revoked
+    let revoked instance =
+      instance # rescinded ( )
 
     let (=) = (=)
 end;;
@@ -109,4 +110,31 @@ module Exception (Type : sig type t end) : (IException with type t := Type.t) = 
   end;;
 end;;
 
-(* end *)
+module Revocable ( ) = struct
+  exception RevokedReference
+  exception AlreadyRevoked
+
+  let revoked = ref false
+
+  let revocable lambda value =
+    if !revoked then raise RevokedReference else lambda value
+
+  let revoke ( ) =
+    if !revoked then raise AlreadyRevoked else revoked := true
+end;;
+
+module Pair = struct
+  let exceptional (type a) ( ) =
+    let module Module = Exception (struct type t = a end) in
+    let raiser  = Module.Raiser.raise in
+    let handler = Module.Handler.handle in
+    (raiser, handler)
+
+  let sealing ( ) =
+    let (token, _) = Token.create ( ) in
+    let sealer     = Box.Sealer.seal token in
+    let unsealer   = Box.Unsealer.unseal token in
+    (sealer, unsealer)
+end;;
+
+(* END *)

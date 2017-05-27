@@ -1,5 +1,5 @@
 Name: shared-secret
-Version: 0.2
+Version: 0.3
 Synopsis: Exceptions are shared secrets.
 Authors: Marco Aurélio da Silva <marcoonroad@gmail.com>
 License: MIT
@@ -45,6 +45,14 @@ Executable "generic"
   Install: false
   BuildDepends: shared-secret, oUnit
 
+Executable "revocable"
+  Path: lib_test
+  MainIs: revocable.ml
+  Build$: flag(tests)
+  CompiledObject: byte
+  Install: false
+  BuildDepends: shared-secret, oUnit
+
 Test "exceptional"
   Run$: flag(tests)
   TestTools: exceptional
@@ -61,4 +69,10 @@ Test "generic"
   Run$: flag(tests)
   TestTools: generic
   Command: $generic
+  WorkingDirectory: lib_test
+
+Test "revocable"
+  Run$: flag(tests)
+  TestTools: revocable
+  Command: $revocable
   WorkingDirectory: lib_test

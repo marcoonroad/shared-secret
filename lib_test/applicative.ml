@@ -1,52 +1,53 @@
-open OUnit2;;
-open SharedSecret;;
+open OUnit2
+open SharedSecret
 
 (*
   'Cause OCaml has applicative functor semantics, two distinct instances
-  of Message(String) shares the same abstract type t, which is Message(String).t,
+  of Message(String) share the same abstract type t, which is Message(String).t,
   for this reason, I need to think a way out of it, where every instance, even
   sharing the same dependency (e.g, String), will fail when used one against other
   (e.g, encoding with the first and decoding with the second on the same message will
   be impossible). That thing means I should fake generative functor semantics.
+
+  Additional note:
+  ----------------
+
+  Private types in OCaml are somehow generative, but they expose some details, thus,
+  allowing upcasts into the super type. The major difference between private types
+  and existential types is that private types allow the use outside the module boundary,
+  but disallow the creation of such "private" values outside that boundary (existentials
+  disallow both use and creation outside).
+
 *)
 
 (***** fixed, but only for OCaml >= 4.02 *****)
 
-module First  = Message (String) ( );;
-module Second = Message (String) ( );;
+module First = struct
+  include Message (String) ( )
 
-let first_encoder  ( ) = First.Encoder.encode  "Hello, OCaml!";;
-let second_encoder ( ) = Second.Encoder.encode "Hello, World!";;
+  let encoder ( ) = Encoder.encode "Hello, OCaml!"
+  let decoder     = Decoder.decode
+end
 
-let first_decoder  = First.Decoder.decode
-let second_decoder = Second.Decoder.decode
+module Second = struct
+  include Message (String) ( )
 
-let first_against_first ctxt =
-  assert_equal (first_decoder (first_encoder ( ))) "Hello, OCaml!";;
+  let encoder ( ) = Encoder.encode "Hello, World!"
+  let decoder     = Decoder.decode
+end
 
-(* === TYPE ERROR ===
+let __first_against_first ctxt =
+  assert_equal (First.decoder (First.encoder ( ))) "Hello, OCaml!"
 
-let second_against_first ctxt =
-  assert_equal (second_decoder (first_encoder ( ))) "Hello, OCaml!";;
+let __second_against_second ctxt =
+  assert_equal (Second.decoder (Second.encoder ( ))) "Hello, World!"
 
-let first_against_second ctxt =
-  assert_equal (first_decoder (second_encoder ( ))) "Hello, World!";;
-
-*)
-
-let second_against_second ctxt =
-  assert_equal (second_decoder (second_encoder ( ))) "Hello, World!";;
-
-let suite = "suite" >::: [
-  "first_against_first"   >:: first_against_first;
-(* === UNBOUND VARIABLE ===
-
-  "second_against_first"  >:: second_against_first;
-  "first_against_second"  >:: first_against_second;
-
-*)
-  "second_against_second" >:: second_against_second
-];;
+let suite = "applicative-suite" >::: [
+  "first-against-first"   >:: __first_against_first;
+  "second-against-second" >:: __second_against_second
+]
 
 let _ =
     run_test_tt_main suite
+
+(* END *)

@@ -43,4 +43,17 @@ end;;
 
 module Exception : functor (Type : sig type t end) -> (IException with type t := Type.t);;
 
-(* end *)
+module Revocable : functor ( ) -> sig
+  exception RevokedReference
+  exception AlreadyRevoked
+
+  val revocable : ('a -> 'b) -> ('a -> 'b)
+  val revoke    : unit -> unit
+end;;
+
+module Pair : sig
+  val exceptional : unit -> ('a -> 'b) * ((unit -> 'c) -> ('a -> 'c) -> 'c)
+  val sealing     : unit -> ('a -> 'a Box.t) * ('a Box.t -> 'a)
+end;;
+
+(* END *)
