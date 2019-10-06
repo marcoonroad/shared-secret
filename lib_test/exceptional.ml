@@ -1,5 +1,5 @@
 open OUnit2
-open SharedSecret
+open Shared_secret
 
 let identity value = value
 

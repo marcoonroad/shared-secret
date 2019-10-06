@@ -1,5 +1,5 @@
 open OUnit2
-open SharedSecret
+open Shared_secret
 
 (*
   'Cause OCaml has applicative functor semantics, two distinct instances
@@ -36,10 +36,10 @@ module Second = struct
   let decoder     = Decoder.decode
 end
 
-let __first_against_first ctxt =
+let __first_against_first _ =
   assert_equal (First.decoder (First.encoder ( ))) "Hello, OCaml!"
 
-let __second_against_second ctxt =
+let __second_against_second _ =
   assert_equal (Second.decoder (Second.encoder ( ))) "Hello, World!"
 
 let suite = "applicative-suite" >::: [
