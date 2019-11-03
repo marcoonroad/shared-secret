@@ -1,5 +1,5 @@
 open OUnit2
-open SharedSecret
+open Shared_secret
 
 module First = struct
   let (token, revoker) = Token.create ( )

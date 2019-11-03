@@ -1,6 +1,6 @@
 open OUnit2
 
-module R = SharedSecret.Revocable ( )
+module R = Shared_secret.Revocable ( )
 
 let revoke ( ) =
   try R.revoke ( ) with R.AlreadyRevoked -> ( )
