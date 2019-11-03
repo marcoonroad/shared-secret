@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/marcoonroad/shared-secret.svg?branch=master)](https://travis-ci.org/marcoonroad/shared-secret)
-
 # shared-secret
 Abstract (encapsulated) messages or hidden (semi-deterministic) exceptions using OCaml's module system.
 
+[![Build Status](https://travis-ci.org/marcoonroad/shared-secret.svg?branch=master)](https://travis-ci.org/marcoonroad/shared-secret)
+
 A package inspired by this post: https://existentialtype.wordpress.com/2012/12/03/exceptions-are-shared-secrets/
+
 
 ## Installation
 
@@ -20,6 +21,7 @@ $ opam install .
 ```
 
 The library is linked by Dune/Findlib as `shared-secret` as well.
+
 
 ## API for version 0.1
 
@@ -92,6 +94,7 @@ module Handler : sig
 end;;
 ```
 
+
 ## API for version 0.2
 
 There is no break of compatibility with the previous API. This current
@@ -143,6 +146,7 @@ The list below also shows where exceptions may be thrown:
 * `Token.RevokedToken`, occurs on either `Box.Sealer.seal` or `Box.Unsealer.unseal` if `Token.revoke` was called at least once
 * `Box.InvalidToken`, always raised on `Box.Unsealer.unseal` if the `'value Box.t` was sealed with a different `Token.t`
 
+
 ## API for version 0.3
 
 In this version 2 new things were added. One thing is a module called `Pair` while the other is a generative functor called
@@ -182,8 +186,12 @@ module Revocable : functor ( ) -> sig
 end;;
 ```
 
+
+## Contributors
+
+- [zapashcanon](https://github.com/zapashcanon)
+
+
 ## References
 
 * <a name="morris-73"> </a> [ Morris73 ] Protection in Programming Languages, 1973 - James H. Morris Jr.
-
-EOF
