@@ -5,9 +5,25 @@ Abstract (encapsulated) messages or hidden (semi-deterministic) exceptions using
 
 A package inspired by this post: https://existentialtype.wordpress.com/2012/12/03/exceptions-are-shared-secrets/
 
-### API for version 0.1
+## Installation
 
-  This package actually provides only one module file called `SharedSecret`. This module contains 2 functors,
+If available on OPAM:
+
+```
+$ opam install shared-secret
+```
+
+Otherwise, through this project directory (changes should be committed):
+
+```
+$ opam install .
+```
+
+The library is linked by Dune/Findlib as `shared-secret` as well.
+
+## API for version 0.1
+
+  This package actually provides only one module file called `Shared_secret`. This module contains 2 functors,
 which are needed for different purposes. They are `Message` and `Exception`, parameterized by:
 
 ```ocaml
@@ -76,10 +92,10 @@ module Handler : sig
 end;;
 ```
 
-### API for version 0.2
+## API for version 0.2
 
 There is no break of compatibility with the previous API. This current
-API provides 2 additional modules in the namespace of `SharedSecret`,
+API provides 2 additional modules in the namespace of `Shared_secret`,
 called `Token` and `Box`. They are inspired on the Sealing Pairs
 mechanisms of the [Object Capability Model](http://http://erights.org/elib/capability/ode/ode-capabilities.html). The historical origins of
 these pairs can be found at [Morris73](#morris-73), though.
@@ -127,7 +143,7 @@ The list below also shows where exceptions may be thrown:
 * `Token.RevokedToken`, occurs on either `Box.Sealer.seal` or `Box.Unsealer.unseal` if `Token.revoke` was called at least once
 * `Box.InvalidToken`, always raised on `Box.Unsealer.unseal` if the `'value Box.t` was sealed with a different `Token.t`
 
-### API for version 0.3
+## API for version 0.3
 
 In this version 2 new things were added. One thing is a module called `Pair` while the other is a generative functor called
 `Revocable`. This current API provides
@@ -166,7 +182,7 @@ module Revocable : functor ( ) -> sig
 end;;
 ```
 
-### References
+## References
 
 * <a name="morris-73"> </a> [ Morris73 ] Protection in Programming Languages, 1973 - James H. Morris Jr.
 
